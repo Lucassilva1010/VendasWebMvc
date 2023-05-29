@@ -19,8 +19,16 @@ namespace VendasWebMvc.Services
         public List<Vendedor> EncontrarTudo()
         {
             return _context.Vendedor.ToList();// Isso é uma operação Sincrona,
-                                              // pois ela vai no banco e espera o
+                                            // pois ela vai no banco e espera o
                                               // branco gerar para poder retornar 
         }
+        public void Inserir(Vendedor vendedor)
+        {
+            //Inserindo um novo vendedor no banco
+            _context.Add(vendedor);
+            _context.SaveChanges();
+        }
+
+
     }
 }
