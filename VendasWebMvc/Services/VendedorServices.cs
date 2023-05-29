@@ -24,6 +24,7 @@ namespace VendasWebMvc.Services
         }
         public void Inserir(Vendedor vendedor)
         {
+            vendedor.Departamento = _context.Departamentoo.First();
             //Inserindo um novo vendedor no banco
             _context.Add(vendedor);
             _context.SaveChanges();
