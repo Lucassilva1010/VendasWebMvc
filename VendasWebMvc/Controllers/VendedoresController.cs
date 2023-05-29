@@ -49,6 +49,24 @@ namespace VendasWebMvc.Controllers
             return View(obj);
         }
 
+        public IActionResult Details(int? id)
+        {
+
+            if (id == null)
+            {
+                return NotFound("Esse ID não existe");
+            }
+
+            var obj = _vendedorServices.EncontraPorId(id.Value);
+
+            if (obj == null)
+            {
+                return NotFound("Esse ID não existe");
+
+            }
+            return View(obj);
+        }
+
         //Ações POST
         [HttpPost]
         [ValidateAntiForgeryToken]// Ler mais sobe depois
