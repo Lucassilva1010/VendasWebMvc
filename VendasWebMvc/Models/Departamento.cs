@@ -12,10 +12,7 @@ namespace VendasWebMvc.Models
         public ICollection<Vendedor> Vendedores { get; set; } = new List<Vendedor>();
 
 
-        public Departamento()
-        {
-
-        }
+        
 
         public Departamento(int id, string nome)
         {

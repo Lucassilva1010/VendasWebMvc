@@ -43,6 +43,7 @@ namespace VendasWebMvc
 
             services.AddScoped<SeedingService>();// está sendo usado para povoar o banco 
             services.AddScoped<VendedorServices>();//Utlizado como injeção de dependecia para a classe de serviços de Vendedor
+            services.AddScoped<DepartamentoServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

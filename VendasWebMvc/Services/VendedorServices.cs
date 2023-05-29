@@ -24,12 +24,22 @@ namespace VendasWebMvc.Services
         }
         public void Inserir(Vendedor vendedor)
         {
-            vendedor.Departamento = _context.Departamentoo.First();
+            
             //Inserindo um novo vendedor no banco
             _context.Add(vendedor);
             _context.SaveChanges();
         }
+        public Vendedor EncontraPorId(int id)
+        {
+            return _context.Vendedor.FirstOrDefault(obj => obj.Id == id);
+        }
 
+        public void RemoverPorId(int id)
+        {
+            var obj = _context.Vendedor.Find(id);
+            _context.Vendedor.Remove(obj);
+            _context.SaveChanges();
+        }
 
     }
 }
