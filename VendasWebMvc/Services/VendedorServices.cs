@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using VendasWebMvc.Data;
 using VendasWebMvc.Models;
 using Microsoft.EntityFrameworkCore;
+using VendasWebMvc.Services.Exception;
 
 namespace VendasWebMvc.Services
 {
@@ -41,12 +42,27 @@ namespace VendasWebMvc.Services
             _context.Vendedor.Remove(obj);
             _context.SaveChanges();
         }
-        public void EditarPorId(int id)
+        public void EditarPorId(Vendedor vendedor)
         {
-            var obj = _context.Vendedor.Find(id);
-            _context.Vendedor.Update(obj);
-            _context.SaveChanges();
+            if (!_context.Vendedor.Any(x=> x.Id == vendedor.Id))
+            {
+                throw new DllNotFoundException("Não esixte esse ID");
+            }
+            try
+            {
+                _context.Update(vendedor);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+
+                throw new DbConcurrencyException(e.Message);
+            }
+          
+            
         }
+
+       
 
     }
 }
