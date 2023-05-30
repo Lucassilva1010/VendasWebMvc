@@ -91,6 +91,12 @@ namespace VendasWebMvc.Controllers
         [ValidateAntiForgeryToken]// Ler mais sobe depois
         public IActionResult Create(Vendedor vendedor)
         {
+            if (!ModelState.IsValid) // Evita de cadastros em Branco, por falta do javaScritp
+            {
+                var departamentos = _departamentoServices.EncontraTodosDepartamentos();
+                var viewModel = new VendedorFormVielModel { Vendedor = vendedor, Departamentos = departamentos };
+                return View(viewModel);
+            }
             _vendedorServices.Inserir(vendedor);
             return RedirectToAction(nameof(Index));//Quando salvar volta pra o index da pagina vendedores
         }
@@ -106,6 +112,13 @@ namespace VendasWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Vendedor vendedor)
         {
+
+            if (!ModelState.IsValid) // Evita de cadastros em Branco, por falta do javaScritp
+            {
+                var departamentos = _departamentoServices.EncontraTodosDepartamentos();
+                var viewModel = new VendedorFormVielModel { Vendedor = vendedor, Departamentos = departamentos };
+                return View(viewModel);
+            }
             if (id != vendedor.Id)
             {
                 return RedirectToAction(nameof(Error), new { menssage = "ID não é correspondente.!" });
