@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using VendasWebMvc.Models;
@@ -37,14 +38,14 @@ namespace VendasWebMvc.Controllers
         {
             if (id == null)
             {
-                return NotFound("Esse ID não existe");
+                return RedirectToAction(nameof(Error), new { menssage = "ID não fornecido!"});
             }
 
             var obj = _vendedorServices.EncontraPorId(id.Value);
 
             if (obj == null)
             {
-                return NotFound("Esse ID não existe");
+                return RedirectToAction(nameof(Error), new { menssage = "ID não Encontrado!" });
 
             }
             return View(obj);
@@ -55,14 +56,14 @@ namespace VendasWebMvc.Controllers
 
             if (id == null)
             {
-                return NotFound("Esse ID não existe");
+                return RedirectToAction(nameof(Error), new { menssage = "ID não Fornecido!" });
             }
 
             var obj = _vendedorServices.EncontraPorId(id.Value);
 
             if (obj == null)
             {
-                return NotFound("Esse ID não existe");
+                return RedirectToAction(nameof(Error), new { menssage = "ID não Encontrado!" });
 
             }
             return View(obj);
@@ -72,13 +73,13 @@ namespace VendasWebMvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { menssage = "ID não Não fornecido!" });
             }
 
             var obj = _vendedorServices.EncontraPorId(id.Value);
             if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { menssage = "ID não Encontrado!" }); ;
             }
             List<Departamento> Departamento = _departamentoServices.EncontraTodosDepartamentos();
             VendedorFormVielModel viewlModel = new VendedorFormVielModel { Vendedor = obj, Departamentos = Departamento };
@@ -107,7 +108,7 @@ namespace VendasWebMvc.Controllers
         {
             if (id != vendedor.Id)
             {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { menssage = "ID não é correspondente.!" });
             }
             try
             {
@@ -115,16 +116,25 @@ namespace VendasWebMvc.Controllers
             return RedirectToAction(nameof(Index));
 
             }
-            catch (NotFoundException )
+            catch (NotFoundException e)
             {
 
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { menssage = e.Message });
             }
-            catch(DbConcurrencyException)
+            catch(DbConcurrencyException e)
             {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { menssage =e.Message });
             }
 
+        }
+        public IActionResult Error(string mensaage)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Menssage = mensaage,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+            return View(viewModel);
         }
       
 
