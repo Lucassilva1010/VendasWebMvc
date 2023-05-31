@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,9 +17,9 @@ namespace VendasWebMvc.Services
             _context = context;
         }
 
-        public List<Departamento> EncontraTodosDepartamentos()
+        public async Task<List<Departamento>> EncontraTodosDepartamentos()
         {
-            return _context.Departamentoo.OrderBy(x => x.Nome).ToList();
+            return await _context.Departamentoo.OrderBy(x => x.Nome).ToListAsync();
         }
     }
 
