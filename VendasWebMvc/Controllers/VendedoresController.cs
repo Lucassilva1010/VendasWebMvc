@@ -22,7 +22,7 @@ namespace VendasWebMvc.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var lista =  await _vendedorServices.EncontrarTudo();
+            var lista = await _vendedorServices.EncontrarTudo();
 
             return View(lista);
         }
@@ -34,11 +34,11 @@ namespace VendasWebMvc.Controllers
 
             return View(viewModel);
         }
-        public  async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
-                return RedirectToAction(nameof(Error), new { menssage = "ID não fornecido!"});
+                return RedirectToAction(nameof(Error), new { menssage = "ID não fornecido!" });
             }
 
             var obj = await _vendedorServices.EncontraPorId(id.Value);
@@ -89,11 +89,11 @@ namespace VendasWebMvc.Controllers
         //Ações POST
         [HttpPost]
         [ValidateAntiForgeryToken]// Ler mais sobe depois
-        public async Task< IActionResult> Create(Vendedor vendedor)
+        public async Task<IActionResult> Create(Vendedor vendedor)
         {
             if (!ModelState.IsValid) // Evita de cadastros em Branco, por falta do javaScritp
             {
-                var departamentos =  await _departamentoServices.EncontraTodosDepartamentos();
+                var departamentos = await _departamentoServices.EncontraTodosDepartamentos();
                 var viewModel = new VendedorFormVielModel { Vendedor = vendedor, Departamentos = departamentos };
                 return View(viewModel);
             }
@@ -103,11 +103,22 @@ namespace VendasWebMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task< IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            await _vendedorServices.RemoverPorId(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+
+                await _vendedorServices.RemoverPorId(id);
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch (IntegrityException e)
+            {
+
+                return RedirectToAction(nameof(Error), new { messagem = e.Message });
+            }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Vendedor vendedor)
@@ -125,8 +136,8 @@ namespace VendasWebMvc.Controllers
             }
             try
             {
-           await _vendedorServices.EditarPorId(vendedor);
-            return RedirectToAction(nameof(Index));
+                await _vendedorServices.EditarPorId(vendedor);
+                return RedirectToAction(nameof(Index));
 
             }
             catch (NotFoundException e)
@@ -134,9 +145,9 @@ namespace VendasWebMvc.Controllers
 
                 return RedirectToAction(nameof(Error), new { menssage = e.Message });
             }
-            catch(DbConcurrencyException e)
+            catch (DbConcurrencyException e)
             {
-                return RedirectToAction(nameof(Error), new { menssage =e.Message });
+                return RedirectToAction(nameof(Error), new { menssage = e.Message });
             }
 
         }
@@ -149,7 +160,7 @@ namespace VendasWebMvc.Controllers
             };
             return View(viewModel);
         }
-      
+
 
 
 
