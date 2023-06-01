@@ -37,9 +37,22 @@ namespace VendasWebMvc.Controllers
             var result = await _registroDeVendasService.EncontrarPorData(dataMinima,dataMaxima);
             return View(result);
         }
-        public IActionResult PesquisaAgrupada()
+        public async Task<IActionResult> PesquisaAgrupada(DateTime? dataMinima, DateTime? dataMaxima)
         {
-            return View();
+            //isso vai mostra um valor padrão la no formulario de filtrar
+            if (!dataMinima.HasValue)
+            {
+                dataMinima = new DateTime(DateTime.Now.Year, 1, 1);
+            }
+            if (!dataMaxima.HasValue)
+            {
+                dataMaxima = DateTime.Now;
+            }
+
+            ViewData["dataMinima"] = dataMinima.Value.ToString("yyyy-MM-dd");
+            ViewData["dataMaxima"] = dataMaxima.Value.ToString("yyyy-MM-dd");
+            var result = await _registroDeVendasService.EncontrarPorGrupo(dataMinima, dataMaxima);
+            return View(result);
         }
     }
 }
